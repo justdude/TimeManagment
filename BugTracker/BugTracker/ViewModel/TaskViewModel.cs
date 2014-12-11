@@ -10,10 +10,9 @@ using BugTracker.Data;
 
 namespace BugTracker.ViewModel
 {
-	public class TaskViewModel: ViewModelBase
+	public class TaskViewModel: ExtendedViewModelBase
 	{
-		public TaskCard Task { get; private set; }
-
+		public CardData Task { get; private set; }
 
 		public string Name
 		{
@@ -73,9 +72,9 @@ namespace BugTracker.ViewModel
 			}
 		}
 
-		public TaskViewModel(TaskCard task)
+		public TaskViewModel(CardData task)
 		{
-			task = Task;
+			Task = task;
 		}
 
 	}

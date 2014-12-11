@@ -13,209 +13,203 @@ using GalaSoft.MvvmLight;
 using BugTracker.Services;
 using BugTracker.Data;
 using System.Threading;
+using BugTracker.Handlers;
 
 
 namespace BugTracker.ViewModel
 {
-    public class MainViewModel : ViewModelBase
+	public class MainViewModel : ExtendedViewModelBase
+	{
+		#region Fields
+
+		private WebWindow.AuthWindow window;
+
+		#endregion
+
+		#region Properties
+
+		public ObservableCollection<ListViewModel> Lists { get; private set; }
+		public static CTrelloAdapter TrelloAdapter { get; private set; }
+
+		public ICommand Update;
+
+		#endregion
+
+		#region Ctor
+		public MainViewModel()
 		{
-			#region Fields
+			if (IsInDesignMode)
+				return;
 
-			private bool mvIsLoading;
-			private WebWindow.AuthWindow window;
-
-
-			#endregion
-
-			#region Properties
-
-			public bool IsLoading
-			{
-				get
-				{
-					return mvIsLoading;
-				}
-				set
-				{
-					if (mvIsLoading == value)
-						return;
-
-					mvIsLoading = value;
-
-					base.RaisePropertyChanged("IsLoading");
-				}
-			}
-
-
-			public ObservableCollection<TaskViewModel> Tasks { get; private set; }
-			public ObservableCollection<BoardViewModel> Boards { get; private set; }
-
-			public ICommand Update;
-
-			#endregion
-
-			#region Ctor
-			public MainViewModel()
-      {
-				Init();
-				Task.Factory.StartNew(() => { OnLoad(); });
-      }
-			#endregion
-
-			private void Init()
-			{
-				//CTrelloAdapter trelloAdapter = new CTrelloAdapter();
-				window = new WebWindow.AuthWindow();
-
-				Tasks = new ObservableCollection<TaskViewModel>();
-				//Tasks.CollectionChanged += Tasks_CollectionChanged;
-
-				Login();
-			}
-
-			private void Login()
-			{
-				//Task task = new Task(() =>
-				//{
-
-					Invoke(() => { IsLoading = true; });
-
-					System.Threading.Thread.Sleep(1000);
-
-					try
-					{
-						//Uri url = trelloAdapter.Trello.GetAuthorizationUrl(Constants.Global.AppName, TrelloNet.Scope.ReadWriteAccount, TrelloNet.Expiration.Never);
-
-						var del = (MethodInvoker)delegate()
-						{
-							window.Navigate(Constants.Trello.AuthorizationUrl); //url.AbsoluteUri);
-							window.ShowDialog();
-						};
-
-						del.Invoke();
-
-						var token = window.Parse(@"<pre>", @"</pre>").Trim();
-						Engine.Instance.Oauth.Token = token;
-
-
-						//trelloAdapter.Trello.GetAuthorizationUrl(token);
-					}
-					catch (Exception ex)
-					{
-
-					}
-
-					Invoke(() => { IsLoading = false; });
-
-				//});
-
-				//return task;
-			}
-
-			private void Fill()
-			{
-					Invoke (() => { IsLoading = true; });
-
-					try
-					{
-						IList<TaskBoard> openBoards = Engine.Instance.
-							Board.GetBoards(Services.Trello.CBoardsApi.Filter.Open);
-						IList<TaskBoard> closedBoards = (Engine.Instance.
-							Board.GetBoards(Services.Trello.CBoardsApi.Filter.Closed));
-
-						
-
-						Invoke(() =>
-						{
-							Boards = new ObservableCollection<BoardViewModel>(GetBoards(openBoards));
-							
-							foreach (var item in GetBoards(closedBoards))
-								Boards.Add(item);
-						});
-
-						//Tasks = new ObservableCollection<TaskViewModel>();
-
-					}
-					catch (Exception ex)
-					{
-
-					}
-
-					Invoke(() => { IsLoading = false; });
-
-				
-
-				//return task;
-			}
-
-
-			public static IEnumerable<BoardViewModel> GetBoards(IList<TaskBoard> collection) 
-			{
-				return collection.Select<TaskBoard, BoardViewModel>(p => new BoardViewModel(p));
-			}
-
-			#region Events
-			public void OnLoad()
-			{
-				ThreadPool.QueueUserWorkItem(new WaitCallback(p=>Fill()));
-				//task2.Start();
-			}
-
-
-			void ClosedBoards_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-			{
-				switch (e.Action)
-				{
-					case NotifyCollectionChangedAction.Add:
-						break;
-				}
-			}
-
-			void OpenedBoards_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-			{
-				switch (e.Action)
-				{
-					case NotifyCollectionChangedAction.Add:
-						break;
-				}
-			}
-
-			void Tasks_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-			{
-				//var tasks = (sender as ObservableCollection<TaskViewModel>());
-				
-				//if (tasks == null)
-				//	return;
-
-				switch (e.Action)
-				{
-					case NotifyCollectionChangedAction.Add:
-						
-						break;
-				}
-			}
-			#endregion
-
-
-			public static void BeginInvoke(Action act)
-			{
-				System.Windows.Threading.Dispatcher.CurrentDispatcher.BeginInvoke(act, System.Windows.Threading.DispatcherPriority.DataBind);
-			}
-
-			public static void Invoke(Action act)
-			{
-				if (BugTracker.View.WindowMainView.WindowDispatcher == null)
-					System.Windows.Threading.Dispatcher.CurrentDispatcher.Invoke(
-						act, System.Windows.Threading.DispatcherPriority.DataBind);
-				else
-					BugTracker.View.WindowMainView.WindowDispatcher.Invoke(
-						act, System.Windows.Threading.DispatcherPriority.DataBind);
-			}
-
-			public static void InvokeAsync(Action act)
-			{
-				System.Windows.Threading.Dispatcher.CurrentDispatcher.InvokeAsync(act, System.Windows.Threading.DispatcherPriority.DataBind);
-			}
 			
+			window = new WebWindow.AuthWindow();
+			Login();
+			
+			TrelloAdapter = new CTrelloAdapter();
+			TrelloAdapter.Authorize(Engine.Instance.Oauth.Token);
+			
+			ThreadPool.QueueUserWorkItem(new WaitCallback(p => Load()));
+			//ListDataCollection.Factory.StartNew(() => { });
 		}
+		#endregion
+
+
+		private void Login()
+		{
+			//ListDataCollection task = new ListDataCollection(() =>
+			//{
+
+			Invoke(() => { IsLoading = true; });
+
+			System.Threading.Thread.Sleep(1000);
+
+			try
+			{
+				//Uri url = TrelloAdapter.Trello.GetAuthorizationUrl(Constants.Global.AppName, TrelloNet.Scope.ReadWriteAccount, TrelloNet.Expiration.Never);
+
+				var del = (MethodInvoker)delegate()
+				{
+					window.Navigate(Constants.Trello.AuthorizationUrl); //url.AbsoluteUri);
+					window.ShowDialog();
+				};
+
+				del.Invoke();
+
+				var token = window.Parse(@"<pre>", @"</pre>").Trim();
+				Engine.Instance.Oauth.Token = token;
+			}
+			catch (Exception ex)
+			{
+
+			}
+
+			Invoke(() => { IsLoading = false; });
+
+			//});
+
+			//return task;
+		}
+
+		public void Load()
+		{
+			Invoke(() => { IsLoading = true; });
+
+			try
+			{
+				const string BoardName = "TestForDevBoard";
+				const string BoardDisc = "Boards for test For Dev";
+
+				BoardData mainBoard = GetBoard(BoardName);
+				mainBoard = CreateAndGetIfNull(BoardName, BoardDisc, mainBoard);
+
+				var lists = Engine.Instance.Board.GetLists1(mainBoard.Id);
+
+				if (lists == null)
+					return;
+
+				Invoke(() =>
+				{
+					Lists = new ObservableCollection<ListViewModel>(GetLists(lists));
+				});
+
+				Thread.Sleep(1000);
+
+				foreach (var item in Lists)
+				{
+					item.Load();
+				}
+			}
+			catch (Exception ex)
+			{
+			}
+
+			Invoke(() => { IsLoading = false; });
+			//return task;
+		}
+
+		private static BoardData CreateAndGetIfNull(string BoardName, string BoardDisc, BoardData mainBoard)
+		{
+			if (mainBoard == null)
+			{
+				var res = Engine.Instance.Board.CreateBoard(BoardName, BoardDisc);
+				if (string.IsNullOrEmpty(res))
+					return null;//RAISE ERROR
+
+				mainBoard = GetBoard(BoardName);
+			}
+			return mainBoard;
+		}
+
+		private static BoardData GetBoard(string BoardName)
+		{
+			IList<BoardData> openBoards = Engine.Instance.
+						  Board.GetBoards(Services.Trello.CBoardsApi.Filter.Open);
+			BoardData mainBoard = openBoards.FirstOrDefault(p => p.Name == BoardName);
+			return mainBoard;
+		}
+
+
+		public static IEnumerable<BoardViewModel> GetBoards(IList<BoardData> collection)
+		{
+			if (collection == null)
+				return null;
+
+			return collection.Select<BoardData, BoardViewModel>(p => new BoardViewModel(p));
+		}
+
+		public static IEnumerable<ListViewModel> GetLists(IList<ListData> collection)
+		{
+			if (collection == null)
+				return null;
+
+			return collection.Select<ListData, ListViewModel>(p => new ListViewModel(p));
+		}
+
+
+		#region Events
+		public void OnLoad()
+		{
+			
+			//task2.Start();
+		}
+
+
+		void ClosedBoards_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+		{
+			switch (e.Action)
+			{
+				case NotifyCollectionChangedAction.Add:
+					break;
+			}
+		}
+
+		void OpenedBoards_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+		{
+			switch (e.Action)
+			{
+				case NotifyCollectionChangedAction.Add:
+					break;
+			}
+		}
+
+		void Tasks_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+		{
+			//var tasks = (sender as ObservableCollection<TaskViewModel>());
+
+			//if (tasks == null)
+			//	return;
+
+			switch (e.Action)
+			{
+				case NotifyCollectionChangedAction.Add:
+
+					break;
+			}
+		}
+		#endregion
+
+
+		
+
+	}
 }

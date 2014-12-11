@@ -14,11 +14,11 @@ namespace BugTracker.ViewModel
 {
 	public class BoardViewModel :ViewModelBase
 	{
-		public TaskBoard Board { get; private set; }
+		public BoardData Board { get; private set; }
 
 
-		private List<TaskCard> mvCards;
-		public List<TaskCard> Cards
+		private List<CardData> mvCards;
+		public List<CardData> Cards
 		{
 			get
 			{
@@ -72,12 +72,12 @@ namespace BugTracker.ViewModel
 			}
 		}
 
-		public BoardViewModel(TaskBoard board)
+		public BoardViewModel(BoardData board)
 		{
 			Board = board;
 		}
 
-		public IEnumerable<TaskCard> GetCards()
+		public IEnumerable<CardData> GetCards()
 		{
 			return Engine.Instance.Board.GetCards(Id).ToList();
 		}

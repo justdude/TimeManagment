@@ -29,11 +29,10 @@ namespace BugTracker.Services.Trello
 
 		}
 
-		public void CreateBoard(string boardName, string boardDescription)
+		public string CreateBoard(string boardName, string boardDescription)
 		{
-
 			if (CheckArg())
-				return;
+				return string.Empty;
 
 			var client = CreateClient();
 			var createRequest = CreateRequest("/boards");
@@ -41,7 +40,7 @@ namespace BugTracker.Services.Trello
 			createRequest.AddParameter("name", boardName);
 			createRequest.AddParameter("desc", boardDescription);
 
-			var taskBoardResponse = client.Execute<TaskBoard>(createRequest);
+			var taskBoardResponse = client.Execute<BoardData>(createRequest);
 			var boardId = taskBoardResponse.Data.Id;
 
 			//Not currently supported
@@ -49,9 +48,10 @@ namespace BugTracker.Services.Trello
 			//visibilityRequest.AddParameter("permissionLevel", visibility.ToString().ToLower());
 			//await ExecuteAwaitableAsync(client, visibilityRequest);
 
-			CreateList(client, boardId, "To Do");
-			CreateList(client, boardId, "Doing");
-			CreateList(client, boardId, "Done");
+			//CreateList(client, boardId, "To Do");
+			//CreateList(client, boardId, "Doing");
+			//CreateList(client, boardId, "Done");
+			return boardId;
 		}
 
 		public void CreateList(string boardId, string name)
@@ -73,20 +73,23 @@ namespace BugTracker.Services.Trello
 
 			client.Execute(createRequest);
 		}
-		public BoardList GetList(string listId)
+		public List<ListData> GetLists1(string boardId)
 		{
-			var resource = string.Format("/lists/{0}", listId);
+			var resource = string.Format("/boards/{0}/lists", boardId);
 
 			if (CheckArg())
 				return null;
 
-			var request = CreateRequest(resource);
+			var request = CreateDumpRequest(resource);
+			request.AddParameter("filter ", "all");//enum
+			CBoardsApi.AddTokenToParam(Key, Token, request);
 			var client = CreateClient();
-			var restResponse = client.Execute<BoardList>(request);
+			var url = client.BuildUri(request);
+			var restResponse = client.Execute<List<ListData>>(request);
 			return restResponse.Data;
 		}
 
-		public void UpdateList(BoardList boardList)
+		public void UpdateList(ListData boardList)
 		{
 
 			if (CheckArg())
@@ -100,7 +103,7 @@ namespace BugTracker.Services.Trello
 
 			client.Execute(request);
 		}
-		public TaskBoard GetBoard(string boardId)
+		public BoardData GetBoard(string boardId)
 		{
 			var resource = string.Format("/boards/{0}", boardId);
 
@@ -109,21 +112,21 @@ namespace BugTracker.Services.Trello
 
 			var request = CreateRequest(Token, resource);
 			var client = CreateClient();
-			var executeAwaitableAsync = client.Execute<TaskBoard>(request);
+			var executeAwaitableAsync = client.Execute<BoardData>(request);
 			return executeAwaitableAsync.Data;
 		}
 
-		public void DeleteBoard(TaskBoard taskBoard)
+		public void DeleteBoard(BoardData taskBoard)
 		{
 			throw new NotSupportedException();
 		}
 
-		public List<TaskBoard> GetBoards(Filter filter = Filter.Open)
+		public List<BoardData> GetBoards(Filter filter = Filter.Open)
 		{
 			const string resource = "/members/me/boards";
 
 			if (CheckArg())
-				return new List<TaskBoard>();
+				return new List<BoardData>();
 
 			var filterStr = filter.ToString().ToLower();
 
@@ -132,18 +135,18 @@ namespace BugTracker.Services.Trello
 			request.AddParameter("card_fields", "idList");
 
 			var client = CreateClient();
-			var restResponse = client.Execute<List<TaskBoard>>(request);
+			var restResponse = client.Execute<List<BoardData>>(request);
 
 			Debug.WriteLine(restResponse.Content);
 			return restResponse.Data;
 		}
 
-		public IEnumerable<TaskCard> GetCards(string boardId, Filter filter = Filter.Open)
+		public IEnumerable<CardData> GetCards(string boardId, Filter filter = Filter.Open)
 		{
 			string resource = String.Format("/boards/{0}/cards", boardId);
 
 			if (CheckArg())
-				return new List<TaskCard>();
+				return new List<CardData>();
 
 			var filterStr = filter.ToString().ToLower();
 
@@ -151,23 +154,23 @@ namespace BugTracker.Services.Trello
 			request.AddParameter("filter", filterStr);
 
 			var client = CreateClient();
-			var restResponse = client.Execute<List<TaskCard>>(request);
+			var restResponse = client.Execute<List<CardData>>(request);
 
 			Debug.WriteLine(restResponse.Content);
 			return restResponse.Data;
 		}
 
-		public IEnumerable<BoardList> GetLists(string boardId)
+		public IEnumerable<ListData> GetLists(string boardId)
 		{
 			var resource = string.Format("/boards/{0}/lists/all", boardId);
 
 			if (CheckArg())
-				return Enumerable.Empty<BoardList>();
+				return Enumerable.Empty<ListData>();
 
 			var request = CreateRequest(resource);
 
 			var client = CreateClient();
-			var restResponse = client.Execute<List<BoardList>>(request);
+			var restResponse = client.Execute<List<ListData>>(request);
 			return restResponse.Data.Select(s =>
 			{
 				s.IdBoard = boardId;

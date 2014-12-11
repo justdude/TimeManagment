@@ -91,6 +91,16 @@
 				return restClient;
 			}
 
+			protected static RestRequest CreateDumpRequest(string resource)
+			{
+				var request = new RestRequest
+				{
+					Resource = resource,
+					RequestFormat = DataFormat.Json,
+				};
+				return request;
+			}
+
 			protected static RestRequest CreateRequest(string key, string userToken, string resource)
 			{
 				var request = new RestRequest
@@ -98,10 +108,15 @@
 						Resource = resource,
 						RequestFormat = DataFormat.Json,
 				};
+				AddTokenToParam(key, userToken, request);
+				return request;
+			}
+
+			protected static void AddTokenToParam(string key, string userToken, RestRequest request)
+			{
 				request.AddParameter("key", key); //Testing
 				request.AddParameter("token", userToken);
 				request.AddParameter("r", DateTime.Now.Ticks); //To make sure we don't get cached results
-				return request;
 			}
 
 		

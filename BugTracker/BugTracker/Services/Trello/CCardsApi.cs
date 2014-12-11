@@ -17,7 +17,7 @@ namespace BugTracker.Services.Trello
 
 		}
 
-		public TaskCard GetCard(string cardId)
+		public CardData GetCard(string cardId)
 		{
 			var resource = string.Format("/cards/{0}", cardId);
 
@@ -26,7 +26,7 @@ namespace BugTracker.Services.Trello
 
 			var request = CreateRequest(resource);
 			var client = CreateClient();
-			var restResponse = client.Execute<TaskCard>(request);
+			var restResponse = client.Execute<CardData>(request);
 
 			return restResponse.Data;
 		}
@@ -74,7 +74,7 @@ namespace BugTracker.Services.Trello
 			client.Execute(request);
 		}
 
-		public void CreateCard(TaskCard card)
+		public void CreateCard(CardData card)
 		{
 
 			if (CheckArg())
@@ -91,7 +91,7 @@ namespace BugTracker.Services.Trello
 			client.Execute(request);
 		}
 
-		public IEnumerable<TaskCard> GetCards(string listId, string boardId)
+		public IEnumerable<CardData> GetCards(string listId, string boardId)
 		{
 			var resource = string.Format("/lists/{0}/cards/open", listId);
 
@@ -101,7 +101,7 @@ namespace BugTracker.Services.Trello
 			var request = CreateRequest(Token, resource);
 
 			var client = CreateClient();
-			var response = client.Execute<List<TaskCard>>(request);
+			var response = client.Execute<List<CardData>>(request);
 		
 			return response.Data.Select(c =>
 			{

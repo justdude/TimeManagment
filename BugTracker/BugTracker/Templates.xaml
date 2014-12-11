@@ -127,6 +127,51 @@
 		</Border>
 	</DataTemplate>
 
+
+
+	<DataTemplate x:Key="ListsItemTemplate">
+		<Border 
+                                        HorizontalAlignment="Stretch"    
+                                        BorderThickness=".8"  
+                                        Margin="2" 
+                                        Padding="2.5"  
+                                        Background="BlueViolet"
+                                        BorderBrush="Silver" >
+			
+			<Grid>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="20"></RowDefinition>
+					<RowDefinition Height="*"></RowDefinition>
+				</Grid.RowDefinitions>
+
+				<!--Header-->
+				<StackPanel Orientation="Horizontal">
+					<TextBlock Text="{Binding Name}"></TextBlock>
+					<TextBlock Text="3:23"></TextBlock>
+				</StackPanel>
+				
+				
+				<!--Tasks-->
+				<ListBox Grid.Row="1"
+								 ItemsSource="{Binding Tasks}">
+					<ListBox.ItemTemplate>
+						<DataTemplate>
+							<Border Background="Bisque">
+								<StackPanel>
+									<TextBlock Text="{Binding TaskName}"></TextBlock>
+								</StackPanel>
+							</Border>
+						</DataTemplate>
+					</ListBox.ItemTemplate>
+				</ListBox>
+
+			</Grid>
+
+
+		</Border>
+	</DataTemplate>
+
+
 </ResourceDictionary>
 	
 	

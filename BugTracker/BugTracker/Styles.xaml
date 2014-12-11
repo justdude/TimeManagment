@@ -15,7 +15,7 @@
 		<Setter Property="CornerRadius" Value="18"></Setter>
 			</Style>
 
-	<!--<Style x:Key="ListBoxItemStyle"  TargetType="ListBoxItem">
+	<Style x:Key="ListBoxItemStyle"  TargetType="ListBoxItem">
 		<Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
 
 		<Style.Triggers>
@@ -25,6 +25,6 @@
 			</Trigger>
 		</Style.Triggers>
 
-	</Style>-->
+	</Style>
 	
 </ResourceDictionary>

@@ -12,6 +12,21 @@ namespace BugTracker.Handlers
 	public class CTrelloAdapter
 	{
 		public ITrello Trello { get; private set; }
+		public Member Me
+		{
+			get
+			{
+				if (mvMe == null)
+				{
+					mvMe = Trello.Members.Me();
+				}
+				return mvMe;
+			}
+			private set
+			{
+				mvMe = value;
+			}
+		}
 
 		public CTrelloAdapter()
 		{
@@ -34,6 +49,7 @@ namespace BugTracker.Handlers
 		}
 
 		Member MyAccount;
+		private Member mvMe;
 
 		public IList<Board> GetBoardsForMe()
 		{
@@ -41,10 +57,9 @@ namespace BugTracker.Handlers
 			return allMyBoards;
 		}
 
-		public IList<TrelloNet.List> Lists GetLists(Board board)
+		public IEnumerable<TrelloNet.List> GetLists(Board board, ListFilter filter = ListFilter.All)
 		{
-			return null;
-			//board.
+			return Trello.Lists.ForBoard(board, filter);
 		}
 
 		public void DoStuff()

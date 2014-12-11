@@ -22,7 +22,13 @@
 			<RowDefinition Height="261*"/>
 			<RowDefinition Height="27"/>
 		</Grid.RowDefinitions>
-	
+
+		<!--<TabControl ItemsSource="{Binding Boards}">
+			<TabControl.ItemTemplate>
+				
+			</TabControl.ItemTemplate>
+		</TabControl>-->
+		
 			<StackPanel 
 				Grid.Row="0"
 				Grid.Column="0"
@@ -51,15 +57,14 @@
 
 			</StackPanel>
 
-				<ListBox
+				<!--<ListBox
 						Grid.Row="1"
 						Grid.Column="0"
 						Width="100"
 						VerticalAlignment="Stretch"
 						HorizontalAlignment="Stretch"
-						Background="Red"
 						ItemsSource="{Binding Boards}">
-				</ListBox>
+				</ListBox>-->
 
 
 		<StackPanel 

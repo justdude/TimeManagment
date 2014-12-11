@@ -6,7 +6,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
 
-	
+
 	<Border
 			HorizontalAlignment="Stretch"
 			VerticalAlignment="Stretch"
@@ -14,13 +14,13 @@
 
 
 		<ListBox 
-        ItemsSource="{Binding Tasks}"
+        ItemsSource="{Binding Lists}"
         ItemContainerStyle="{StaticResource ListBoxItemStyle}"
-        ItemTemplate ="{StaticResource ListBoxItemTemplate}"
+        ItemTemplate ="{StaticResource ListsItemTemplate}"
         HorizontalAlignment="Stretch" 
         VerticalAlignment="Stretch" >
 		</ListBox>
 
 	</Border>
-	
+
 </UserControl>
