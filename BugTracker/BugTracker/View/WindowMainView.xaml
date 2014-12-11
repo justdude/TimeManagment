@@ -96,10 +96,27 @@
 		</StackPanel>
 
 
-		<View:TaskListView
+		<!--<View:TaskListView
 			Grid.Column="1"
 			Grid.Row="1">
-		</View:TaskListView>
+		</View:TaskListView>-->
+
+		<ListBox 
+				Name="Lists"
+				Grid.Column="0"
+				Grid.ColumnSpan="2"
+				Grid.Row="1"
+        ItemsSource="{Binding Lists,IsAsync=True}"
+				ItemContainerStyle="{StaticResource ListBoxItemStyle}"
+				ItemTemplate="{StaticResource ResourceKey=ListsItemTemplate}"
+        HorizontalAlignment="Stretch" 
+        VerticalAlignment="Stretch" >
+			<!--<ListBox.ItemTemplate>
+				
+
+
+			</ListBox.ItemTemplate>-->
+		</ListBox>
 
 		<!--loading indicator-->
 		<StackPanel Grid.Column="0"

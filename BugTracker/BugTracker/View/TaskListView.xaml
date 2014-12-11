@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
+						 Name="TaskListViewControll"
              d:DesignHeight="300" d:DesignWidth="300">
 
 
@@ -14,7 +15,8 @@
 
 
 		<ListBox 
-        ItemsSource="{Binding Lists}"
+				Name="Lists"
+        ItemsSource="{Binding Lists, ElementName=TaskListViewControll}"
         ItemContainerStyle="{StaticResource ListBoxItemStyle}"
         ItemTemplate ="{StaticResource ListsItemTemplate}"
         HorizontalAlignment="Stretch" 

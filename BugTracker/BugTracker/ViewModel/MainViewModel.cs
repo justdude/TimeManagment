@@ -28,10 +28,25 @@ namespace BugTracker.ViewModel
 
 		#region Properties
 
-		public ObservableCollection<ListViewModel> Lists { get; private set; }
+		public ObservableCollection<ListViewModel> Lists 
+		{
+			get
+			{
+				if (mvLists == null)
+				{
+					Load();
+				}
+				return mvLists;
+			}
+			private set
+			{
+				mvLists = value;
+			}
+		}
 		public static CTrelloAdapter TrelloAdapter { get; private set; }
 
 		public ICommand Update;
+		private ObservableCollection<ListViewModel> mvLists;
 
 		#endregion
 
@@ -47,8 +62,9 @@ namespace BugTracker.ViewModel
 			
 			TrelloAdapter = new CTrelloAdapter();
 			TrelloAdapter.Authorize(Engine.Instance.Oauth.Token);
-			
-			ThreadPool.QueueUserWorkItem(new WaitCallback(p => Load()));
+
+			//Lists = new ObservableCollection<ListViewModel>();
+			//ThreadPool.QueueUserWorkItem(new WaitCallback(p => Load()));
 			//ListDataCollection.Factory.StartNew(() => { });
 		}
 		#endregion
@@ -112,7 +128,7 @@ namespace BugTracker.ViewModel
 					Lists = new ObservableCollection<ListViewModel>(GetLists(lists));
 				});
 
-				Thread.Sleep(1000);
+				Thread.Sleep(1000 * 1);
 
 				foreach (var item in Lists)
 				{

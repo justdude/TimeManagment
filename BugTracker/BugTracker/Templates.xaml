@@ -129,17 +129,18 @@
 
 
 
-	<DataTemplate x:Key="ListsItemTemplate">
+	<DataTemplate  x:Key="ListsItemTemplate">
 		<Border 
-                                        HorizontalAlignment="Stretch"    
-                                        BorderThickness=".8"  
-                                        Margin="2" 
-                                        Padding="2.5"  
-                                        Background="BlueViolet"
-                                        BorderBrush="Silver" >
-			
+																						HorizontalAlignment="Stretch"    
+																						BorderThickness=".8"  
+																						Margin="2" 
+																						Padding="2.5"  
+																						Background="WhiteSmoke"
+																						BorderBrush="Silver" >
+
 			<Grid>
 				<Grid.RowDefinitions>
+					<RowDefinition Height="20"></RowDefinition>
 					<RowDefinition Height="20"></RowDefinition>
 					<RowDefinition Height="*"></RowDefinition>
 				</Grid.RowDefinitions>
@@ -147,13 +148,43 @@
 				<!--Header-->
 				<StackPanel Orientation="Horizontal">
 					<TextBlock Text="{Binding Name}"></TextBlock>
-					<TextBlock Text="3:23"></TextBlock>
+					<TextBlock Text="{Binding Desc}"></TextBlock>
+					
+					
+					<TextBlock Text="{Binding Spent}"></TextBlock>
+					<TextBlock Text="{Binding Estimate}"></TextBlock>
+					<TextBlock Text="{Binding Remaining}"></TextBlock>
+					<Button Command="{Binding Add}">
+						<Path 
+							Width="10" 
+							Height="10"
+							Margin="3,0,0,0"
+							Stretch="Fill" 
+							Fill="#FF000000"
+							Data="F1 M 42,19.0002L 34,19.0002L 34,43.7502L 24,33.7502L 24,44.2502L 38,58.2502L 52,44.2502L 52,33.7502L 42,43.7502L 42,19.0002 Z "/>
+					</Button>
 				</StackPanel>
-				
-				
+
+				<!--SubHeader-->
+				<StackPanel Grid.Row="1" 
+										Visibility="{Binding IsVisibleAddButton, 
+																	Converter={StaticResource booleanToVisibilityConverter}}"
+										Orientation="Horizontal">
+
+					<TextBox Text="{Binding SpentValue}"></TextBox>
+					<TextBox Text="{Binding EstimateValue}"></TextBox>
+					<TextBox Text="{Binding RemainingValue}"></TextBox>
+					
+					<Button Command="{Binding Save}">
+						<TextBlock Text="Ок"></TextBlock>
+					</Button>
+					
+				</StackPanel>
+
+
 				<!--Tasks-->
 				<ListBox Grid.Row="1"
-								 ItemsSource="{Binding Tasks}">
+										 ItemsSource="{Binding Tasks}">
 					<ListBox.ItemTemplate>
 						<DataTemplate>
 							<Border Background="Bisque">
