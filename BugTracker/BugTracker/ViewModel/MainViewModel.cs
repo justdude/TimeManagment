@@ -98,7 +98,7 @@ namespace BugTracker.ViewModel
 						Engine.Instance.Oauth.Token = token;
 
 
-						//trelloAdapter.Trello.Authorize(token);
+						//trelloAdapter.Trello.GetAuthorizationUrl(token);
 					}
 					catch (Exception ex)
 					{

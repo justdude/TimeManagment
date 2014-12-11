@@ -20,39 +20,31 @@ namespace BugTracker.Handlers
 		}
 
 
-		public void Authorize(Scope scope, Expiration exp)
+		private string GetAuthorizationUrl(Scope scope = Scope.ReadWriteAccount, 
+			Expiration exp = Expiration.Never)
 		{
 			Uri url = Trello.GetAuthorizationUrl(Constants.Global.AppName, scope, exp);
-
 			WebRequest request = WebRequest.CreateHttp(url);
-
-			//Trello.Authorize();
+			return request.ToString();
 		}
 
-		public void GetMyAccount()
+		public void Authorize(string token)
 		{
-			MyAccount = Trello.Members.Me();
-			
-		}
-
-		public void Authorize()
-		{
-			//Authorize(Scope.ReadWriteAccount, Expiration.Never);
+			Trello.Authorize(token);
 		}
 
 		Member MyAccount;
 
 		public IList<Board> GetBoardsForMe()
 		{
-
-			GetMyAccount();
-			DoStuff();
-
-//			return Trello.CBoardsApi.ForMe().ToList();
 			List<Board> allMyBoards = Trello.Boards.ForMe(BoardFilter.All).ToList();
-			//List<Board> allMyBoards = Trello.CBoardsApi.ForMember(MyAccount).ToList();
-
 			return allMyBoards;
+		}
+
+		public IList<TrelloNet.List> Lists GetLists(Board board)
+		{
+			return null;
+			//board.
 		}
 
 		public void DoStuff()
