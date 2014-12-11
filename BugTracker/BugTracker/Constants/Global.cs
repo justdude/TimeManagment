@@ -10,5 +10,11 @@ namespace BugTracker.Constants
 	{
 		public const string AppName = "BugTracker";
 
+		public const string Example = @"Plus S/E 0.01/0 end timer.";
+		public const string Plus = "Plus";
+		public const string EndTimer = "end timer.";
+		public const string SpentEstimate = "S/E";
+		public const string Delimeter = "/";
+
 	}
 }

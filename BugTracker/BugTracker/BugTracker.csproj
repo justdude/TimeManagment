@@ -104,12 +104,14 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
+    <Compile Include="Converters\FloatToStringConverter.cs" />
     <Compile Include="Data\Person.cs" />
     <Compile Include="Data\ListData.cs" />
     <Compile Include="Data\BoardData.cs" />
     <Compile Include="Data\CardData.cs" />
     <Compile Include="Data\PrefsData.cs" />
     <Compile Include="Execute.cs" />
+    <Compile Include="Handlers\WordsParser.cs" />
     <Compile Include="Services\Engine.cs" />
     <Compile Include="Services\Trello\CBoardsApi.cs" />
     <Compile Include="Services\Trello\CCardsApi.cs" />

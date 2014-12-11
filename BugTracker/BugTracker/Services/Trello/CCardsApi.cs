@@ -74,6 +74,11 @@ namespace BugTracker.Services.Trello
 			client.Execute(request);
 		}
 
+		public void CreateCard(string idList, string name, string desc)
+		{ 
+			return CreateCard(new CardData(){ IdList = idList, Name = name, Desc = desc};
+		}
+
 		public void CreateCard(CardData card)
 		{
 
