@@ -10,11 +10,20 @@ using BugTracker.Data;
 using System.Windows.Input;
 using BugTracker.Services;
 using GalaSoft.MvvmLight.CommandWpf;
+using System.Threading;
 
 namespace BugTracker.ViewModel
 {
 	public class TaskViewModel: ExtendedViewModelBase
 	{
+
+		private float mvEstimateValue = 0;
+		private float mvSpentValue = 0;
+		private bool mvIsVisibleAddButton = false;
+
+		private RelayCommand OnSave;
+		private ICommand OnAdd;
+
 		public CardData Task { get; private set; }
 
 		public string Name
@@ -77,18 +86,24 @@ namespace BugTracker.ViewModel
 
 		public ICommand Add
 		{
-			get;
-			private set;
+			get
+			{
+				if (OnAdd == null)
+				{
+					OnAdd = new RelayCommand(this.OnSaveClick);
+				}
+				return OnAdd;
+			}
 		}
 
-		private RelayCommand OnSave;
+		
 		public ICommand Save
 		{
 			get
 			{
 				if (OnSave == null)
 				{
-					OnSave = new RelayCommand(this.OnSaveClick);
+					OnSave = new RelayCommand(() => { IsLoading = false; IsVisibleAddButton = true; });
 				}
 				return OnSave;
 			}
@@ -97,17 +112,13 @@ namespace BugTracker.ViewModel
 		private void OnSaveClick()
 		{
 			//FloatToStringConverter
-			PutData(SpentValue, EstimateValue);
+			ThreadPool.QueueUserWorkItem( new WaitCallback((p)=>
+				{ 
+					Invoke(()=>IsLoading = true);
+					PutData(SpentValue, EstimateValue);
+					Invoke(() => IsLoading = false);
+				}));
 		}
-
-		public bool IsVisibleAddButton
-		{
-			get; 
-			set;
-		}
-
-		private float mvEstimateValue = 0;
-		private float mvSpentValue = 0;
 
 		public float SpentValue
 		{
@@ -141,7 +152,6 @@ namespace BugTracker.ViewModel
 				base.RaisePropertyChanged("EstimateValue");
 			}
 		}
-
 		public float RemainingValue
 		{
 			get
@@ -149,6 +159,8 @@ namespace BugTracker.ViewModel
 				return SpentValue - EstimateValue;
 			}
 		}
+
+
 
 		public void PutData(float spent, float estimate)
 		{
