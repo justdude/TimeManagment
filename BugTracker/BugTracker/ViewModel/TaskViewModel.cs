@@ -173,5 +173,22 @@ namespace BugTracker.ViewModel
 			Task = task;
 		}
 
+
+		public bool IsVisibleAddButton
+		{
+			get
+			{
+				return mvIsVisibleAddButton;
+			}
+			set
+			{
+				if (mvIsVisibleAddButton == value)
+					return;
+
+				mvIsVisibleAddButton = value;
+
+				base.RaisePropertyChanged("IsVisibleAddButton");
+			}
+		}
 	}
 }

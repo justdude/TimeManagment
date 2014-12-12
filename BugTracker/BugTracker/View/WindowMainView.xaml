@@ -35,11 +35,13 @@
 				VerticalAlignment="Center"
 				HorizontalAlignment="Center"
 				Orientation="Horizontal">
+				
 				<TextBlock Margin="3,0,0,0"
 									 VerticalAlignment="Center"
 									 HorizontalAlignment="Center"
 									 Text="Доски"></TextBlock>
-				<Path Width="10" 
+				
+			<Path Width="10" 
 							Height="10" 
 							Margin="3,0,0,0"
 							Stretch="Fill" 
@@ -47,15 +49,7 @@
 							VerticalAlignment="Center"
 							Fill="#FF000000" 
 							Data="F1 M 35,19L 41,19L 41,35L 57,35L 57,41L 41,41L 41,57L 35,57L 35,41L 19,41L 19,35L 35,35L 35,19 Z "/>
-				<Path 
-					Width="10" 
-					Height="10"
-					Margin="3,0,0,0"
-					Stretch="Fill" 
-					Fill="#FF000000"
-					Data="F1 M 42,19.0002L 34,19.0002L 34,43.7502L 24,33.7502L 24,44.2502L 38,58.2502L 52,44.2502L 52,33.7502L 42,43.7502L 42,19.0002 Z "/>
-
-			</StackPanel>
+		</StackPanel>
 
 				<!--<ListBox
 						Grid.Row="1"
@@ -85,14 +79,7 @@
 							VerticalAlignment="Center"
 							Fill="#FF000000" 
 							Data="F1 M 35,19L 41,19L 41,35L 57,35L 57,41L 41,41L 41,57L 35,57L 35,41L 19,41L 19,35L 35,35L 35,19 Z "/>
-			<Path 
-					Width="10" 
-					Height="10"
-					Margin="3,0,0,0"
-					Stretch="Fill" 
-					Fill="#FF000000"
-					Data="F1 M 42,19.0002L 34,19.0002L 34,43.7502L 24,33.7502L 24,44.2502L 38,58.2502L 52,44.2502L 52,33.7502L 42,43.7502L 42,19.0002 Z "/>
-
+		
 		</StackPanel>
 
 
@@ -101,10 +88,16 @@
 			Grid.Row="1">
 		</View:TaskListView>-->
 
+		<StackPanel 
+				Grid.Row="1"
+				Grid.Column="0">
+			
+		</StackPanel>
+		
+		<!--Tasks-->
 		<ListBox 
 				Name="Lists"
-				Grid.Column="0"
-				Grid.ColumnSpan="2"
+				Grid.Column="1"
 				Grid.Row="1"
         ItemsSource="{Binding Lists,IsAsync=True}"
 				ItemContainerStyle="{StaticResource ListBoxItemStyle}"

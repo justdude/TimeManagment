@@ -23,112 +23,6 @@
 		</ListBox>
 	</ControlTemplate>
 
-	<DataTemplate x:Key="ListBoxItemTemplate">
-		<Border CornerRadius="2" 
-                                        HorizontalAlignment="Stretch"    
-                                        BorderThickness=".8"  
-                                        Margin="2" 
-                                        Padding="2.5"  
-                                        Background="#66F8F8FF" 
-                                        BorderBrush="Silver" >
-
-			<Grid  HorizontalAlignment="Stretch" >
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="40"></ColumnDefinition>
-					<ColumnDefinition Width="420"></ColumnDefinition>
-					<ColumnDefinition Width="85"></ColumnDefinition>
-					<ColumnDefinition Width="350"></ColumnDefinition>
-					<ColumnDefinition Width="140"></ColumnDefinition>
-					<ColumnDefinition Width="40"></ColumnDefinition>
-				</Grid.ColumnDefinitions>
-				<Grid
-                  Grid.Column="0" 
-                  HorizontalAlignment="Stretch">
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition Width="100"></ColumnDefinition>
-						<ColumnDefinition Width="320*"></ColumnDefinition>
-					</Grid.ColumnDefinitions>
-					<Image 
-                        Grid.Column="0"
-                                                
-                        Source="{Binding Photo}" 
-                        Stretch="UniformToFill"
-                        Height="58" 
-                        Width="75"></Image>
-					<StackPanel
-                        Grid.Column="1"
-                        VirtualizingStackPanel.IsVirtualizing="True"
-                        Orientation="Vertical">
-						<TextBlock Text="{Binding Name}" MinHeight="25" TextWrapping = "Wrap" FontWeight="Bold" ></TextBlock>
-						<TextBlock Text="{Binding Desc}" MinHeight="25" TextWrapping = "Wrap"></TextBlock>
-					</StackPanel>
-				</Grid>
-
-				<StackPanel 
-                                            VirtualizingStackPanel.IsVirtualizing="True"
-                                            Grid.Column="1"  
-                                            Orientation="Vertical" 
-                                            HorizontalAlignment="Stretch" 
-                                            MinWidth="60" 
-                                            Margin="8,0,0,0">
-					<!--<TextBlock Text="{Binding Size}" Foreground="#FF4D4D4D" OpacityMask="Black"  ></TextBlock>-->
-					<TextBlock Text="{Binding Duration, StringFormat='{}{0} kb/sec'}" Foreground="#FF4D4D4D" OpacityMask="Black"></TextBlock>
-				</StackPanel>
-
-				<ItemsControl Grid.Column="3" 
-                                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                                 ItemsSource="{Binding ListData}"
-                                                 ScrollViewer.CanContentScroll="False"
-                                                 MinWidth="45" 
-                                                 MaxWidth="300"
-                                                 Background="Transparent"
-                                                 BorderBrush="Transparent"
-                                                 Margin="0,0,0,0">
-					<ItemsControl.ItemsPanel>
-						<ItemsPanelTemplate>
-							<WrapPanel Orientation="Horizontal"
-                                                               IsItemsHost="True"/>
-						</ItemsPanelTemplate>
-					</ItemsControl.ItemsPanel>
-					<ItemsControl.ItemTemplate>
-						<DataTemplate>
-							<StackPanel Orientation="Horizontal">
-								<TextBlock FontSize="10" 
-                                                               FontStyle="Oblique" 
-                                                               Margin="0,0,0,0"
-                                                               Text="{Binding}"></TextBlock>
-								<TextBlock FontSize="10" 
-                                                               FontStyle="Oblique" 
-                                                               Margin="0,0,5,0"
-                                                               Text=";"></TextBlock>
-							</StackPanel>
-
-						</DataTemplate>
-					</ItemsControl.ItemTemplate>
-				</ItemsControl>
-
-				<!--<Controls:ProgressRing Grid.Column="3" State="Busy" Visibility="{Binding CurrentProgressVisibility, Converter={StaticResource VisibilityToBoolConverter}}" HorizontalAlignment="Stretch" MinWidth="120" MaxWidth="280" Height="auto" />-->
-				<CheckBox Grid.Column="4" 
-                                                  IsChecked="{Binding Checked, Mode=TwoWay}" 
-                                                  HorizontalAlignment="Center"></CheckBox>
-
-
-				<Grid Grid.Column="5">
-					<!--need download-->
-				</Grid>
-
-
-				<!--<StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="8,0,0,0">
-                                            <TextBlock Text="{Binding Size}" Foreground="#FF4D4D4D" OpacityMask="Black"></TextBlock>
-                                        </StackPanel>-->
-
-
-			</Grid>
-		</Border>
-	</DataTemplate>
-
-
-
 	<DataTemplate  x:Key="ListsItemTemplate">
 		<Border 
 																						HorizontalAlignment="Stretch"    
@@ -141,12 +35,17 @@
 			<Grid>
 				<Grid.RowDefinitions>
 					<RowDefinition Height="20"></RowDefinition>
-					<RowDefinition Height="20"></RowDefinition>
+					<RowDefinition Height="*"></RowDefinition>
 					<RowDefinition Height="*"></RowDefinition>
 				</Grid.RowDefinitions>
-
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="240*"></ColumnDefinition>
+					<ColumnDefinition Width="*"></ColumnDefinition>
+				</Grid.ColumnDefinitions>
 				<!--Header-->
-				<StackPanel Orientation="Horizontal">
+				<StackPanel 
+					Grid.Row="0"
+					Orientation="Horizontal">
 					<TextBlock Text="{Binding Name}"></TextBlock>
 					<TextBlock Text="{Binding Desc}"></TextBlock>
 					
@@ -161,7 +60,7 @@
 							Margin="3,0,0,0"
 							Stretch="Fill" 
 							Fill="#FF000000"
-							Data="F1 M 42,19.0002L 34,19.0002L 34,43.7502L 24,33.7502L 24,44.2502L 38,58.2502L 52,44.2502L 52,33.7502L 42,43.7502L 42,19.0002 Z "/>
+							Data="F1 M 35,19L 41,19L 41,35L 57,35L 57,41L 41,41L 41,57L 35,57L 35,41L 19,41L 19,35L 35,35L 35,19 Z "/>
 					</Button>
 				</StackPanel>
 
@@ -171,9 +70,9 @@
 																	Converter={StaticResource booleanToVisibilityConverter}}"
 										Orientation="Horizontal">
 
-					<TextBox Text="{Binding SpentValue}"></TextBox>
-					<TextBox Text="{Binding EstimateValue}"></TextBox>
-					<TextBox Text="{Binding RemainingValue}"></TextBox>
+					<TextBox MinWidth="80" Text="{Binding SpentValue}"></TextBox>
+					<TextBox MinWidth="80" Text="{Binding EstimateValue}"></TextBox>
+					<TextBox MinWidth="80" Text="{Binding RemainingValue}"></TextBox>
 					
 					<Button Command="{Binding Save}">
 						<TextBlock Text="Ок"></TextBlock>
@@ -183,13 +82,15 @@
 
 
 				<!--Tasks-->
-				<ListBox Grid.Row="1"
+				<ListBox Grid.Row="2"
 										 ItemsSource="{Binding Tasks}">
 					<ListBox.ItemTemplate>
 						<DataTemplate>
-							<Border Background="Bisque">
-								<StackPanel>
-									<TextBlock Text="{Binding TaskName}"></TextBlock>
+							<Border Background="AliceBlue">
+								<StackPanel 
+										Orientation="Vertical">
+									<TextBlock Text="{Binding Name}"></TextBlock>
+									<TextBlock Text="{Binding Desc}"></TextBlock>
 								</StackPanel>
 							</Border>
 						</DataTemplate>
