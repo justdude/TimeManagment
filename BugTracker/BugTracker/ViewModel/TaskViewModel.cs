@@ -84,41 +84,7 @@ namespace BugTracker.ViewModel
 			}
 		}
 
-		public ICommand Add
-		{
-			get
-			{
-				if (OnAdd == null)
-				{
-					OnAdd = new RelayCommand(this.OnSaveClick);
-				}
-				return OnAdd;
-			}
-		}
 
-		
-		public ICommand Save
-		{
-			get
-			{
-				if (OnSave == null)
-				{
-					OnSave = new RelayCommand(() => { IsLoading = false; IsVisibleAddButton = true; });
-				}
-				return OnSave;
-			}
-		}
-
-		private void OnSaveClick()
-		{
-			//FloatToStringConverter
-			ThreadPool.QueueUserWorkItem( new WaitCallback((p)=>
-				{ 
-					Invoke(()=>IsLoading = true);
-					PutData(SpentValue, EstimateValue);
-					Invoke(() => IsLoading = false);
-				}));
-		}
 
 		public float SpentValue
 		{
@@ -174,21 +140,6 @@ namespace BugTracker.ViewModel
 		}
 
 
-		public bool IsVisibleAddButton
-		{
-			get
-			{
-				return mvIsVisibleAddButton;
-			}
-			set
-			{
-				if (mvIsVisibleAddButton == value)
-					return;
 
-				mvIsVisibleAddButton = value;
-
-				base.RaisePropertyChanged("IsVisibleAddButton");
-			}
-		}
 	}
 }

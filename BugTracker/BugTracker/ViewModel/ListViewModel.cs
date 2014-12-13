@@ -9,11 +9,17 @@ using GalaSoft.MvvmLight;
 using BugTracker.Data;
 using System.Collections.ObjectModel;
 using BugTracker.Services;
+using System.Windows.Input;
+using GalaSoft.MvvmLight.Command;
+using System.Threading;
 
 namespace BugTracker.ViewModel
 {
 	public class ListViewModel: ExtendedViewModelBase
 	{
+		private bool mvIsVisibleAddButton;
+		private RelayCommand OnSave;
+		private RelayCommand OnAdd;
 		public ListData ListDataCollection { get; private set; }
 
 		public ObservableCollection<TaskViewModel> Tasks { get; private set; }
@@ -102,6 +108,60 @@ namespace BugTracker.ViewModel
 				return new ObservableCollection<TaskViewModel>();
 
 			return new ObservableCollection<TaskViewModel>(collection.Select<CardData, TaskViewModel>(p => new TaskViewModel(p)));
+		}
+
+		public bool IsVisibleAddButton
+		{
+			get
+			{
+				return mvIsVisibleAddButton;
+			}
+			set
+			{
+				if (mvIsVisibleAddButton == value)
+					return;
+
+				mvIsVisibleAddButton = value;
+
+				base.RaisePropertyChanged("IsVisibleAddButton");
+			}
+		}
+
+		public ICommand Save
+		{
+			get
+			{
+				if (OnSave == null)
+				{
+					OnSave = new RelayCommand(() => { IsVisibleAddButton = false; });
+				}
+				return OnSave;
+			}
+		}
+
+		public ICommand Add
+		{
+			get
+			{
+				if (OnAdd == null)
+				{
+					OnAdd = new RelayCommand(()=>{IsVisibleAddButton = true;});
+				}
+				return OnAdd;
+			}
+		}
+
+
+
+		private void OnSaveClick()
+		{
+			//FloatToStringConverter
+			ThreadPool.QueueUserWorkItem(new WaitCallback((p) =>
+			{
+				Invoke(() => IsLoading = true);
+				//PutData(SpentValue, EstimateValue);
+				Invoke(() => { IsLoading = false; IsVisibleAddButton = false; });
+			}));
 		}
 
 	}

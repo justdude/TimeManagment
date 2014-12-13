@@ -4,6 +4,7 @@
 				xmlns:ViewMovedels="clr-namespace:BugTracker.ViewModel"
 				xmlns:Converters="clr-namespace:BugTracker.Converters"
 				xmlns:View="clr-namespace:BugTracker.View"
+				xmlns:metrowpf="http://metrowpf.codeplex.com/controls"
         Title="Trello" Height="350" Width="525">
 
 		<Window.DataContext>
@@ -100,6 +101,7 @@
 				Grid.Column="1"
 				Grid.Row="1"
         ItemsSource="{Binding Lists,IsAsync=True}"
+				Focusable="False"
 				ItemContainerStyle="{StaticResource ListBoxItemStyle}"
 				ItemTemplate="{StaticResource ResourceKey=ListsItemTemplate}"
         HorizontalAlignment="Stretch" 
@@ -115,6 +117,7 @@
 		<StackPanel Grid.Column="0"
 								Grid.Row="2"
 								Grid.RowSpan="2"
+								Focusable="False"
 								Visibility="{Binding IsLoading, 
 															Converter={StaticResource booleanToVisibilityConverter}}"
 								Orientation="Horizontal">

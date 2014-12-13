@@ -44,6 +44,7 @@
 				</Grid.ColumnDefinitions>
 				<!--Header-->
 				<StackPanel 
+					Height="25"
 					Grid.Row="0"
 					Orientation="Horizontal">
 					<TextBlock Text="{Binding Name}"></TextBlock>
@@ -55,9 +56,8 @@
 					<TextBlock Text="{Binding Remaining}"></TextBlock>
 					<Button Command="{Binding Add}">
 						<Path 
-							Width="10" 
-							Height="10"
-							Margin="3,0,0,0"
+							Width="8" 
+							Height="8"
 							Stretch="Fill" 
 							Fill="#FF000000"
 							Data="F1 M 35,19L 41,19L 41,35L 57,35L 57,41L 41,41L 41,57L 35,57L 35,41L 19,41L 19,35L 35,35L 35,19 Z "/>
@@ -66,6 +66,7 @@
 
 				<!--SubHeader-->
 				<StackPanel Grid.Row="1" 
+										Margin="0,5,0,0"
 										Visibility="{Binding IsVisibleAddButton, 
 																	Converter={StaticResource booleanToVisibilityConverter}}"
 										Orientation="Horizontal">
@@ -83,7 +84,9 @@
 
 				<!--Tasks-->
 				<ListBox Grid.Row="2"
-										 ItemsSource="{Binding Tasks}">
+									Margin="0,5,0,0"
+									ItemsSource="{Binding Tasks}">
+					
 					<ListBox.ItemTemplate>
 						<DataTemplate>
 							<Border Background="AliceBlue">
@@ -95,6 +98,23 @@
 							</Border>
 						</DataTemplate>
 					</ListBox.ItemTemplate>
+					
+						<ListBox.ItemContainerStyle>
+							<Style TargetType="{x:Type ListBoxItem}">
+								<Setter Property="Focusable" Value="False"/>
+							</Style>
+						</ListBox.ItemContainerStyle>
+					
+					<ListBox.Style>
+						<Style TargetType="ListBox">
+							<Setter Property="Visibility" Value="Collapsed"></Setter>
+							<Style.Triggers>
+								<DataTrigger Binding="{Binding HasItems, RelativeSource={RelativeSource Self}}" Value="True">
+									<Setter Property="Visibility" Value="Visible"></Setter>
+								</DataTrigger>
+							</Style.Triggers>
+						</Style>
+					</ListBox.Style>
 				</ListBox>
 
 			</Grid>
