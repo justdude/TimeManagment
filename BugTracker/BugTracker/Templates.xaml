@@ -51,10 +51,13 @@
 					<TextBlock Text="{Binding Desc}"></TextBlock>
 					
 					
-					<TextBlock Text="{Binding Spent}"></TextBlock>
-					<TextBlock Text="{Binding Estimate}"></TextBlock>
-					<TextBlock Text="{Binding Remaining}"></TextBlock>
-					<Button Command="{Binding Add}">
+					<TextBlock Text="{Binding TotalSpent}"></TextBlock>
+					<TextBlock Text="{Binding TotalEstimate}"></TextBlock>
+					<TextBlock Text="{Binding TotalRemaining}"></TextBlock>
+					<Button Command="{Binding Add}"
+									Margin="5,0,0,0"
+									VerticalAlignment="Center"
+									HorizontalAlignment="Center">
 						<Path 
 							Width="8" 
 							Height="8"
@@ -73,7 +76,7 @@
 
 					<TextBox MinWidth="80" Text="{Binding SpentValue}"></TextBox>
 					<TextBox MinWidth="80" Text="{Binding EstimateValue}"></TextBox>
-					<TextBox MinWidth="80" Text="{Binding RemainingValue}"></TextBox>
+					<TextBox MinWidth="80" Text="{Binding Remaining}"></TextBox>
 					
 					<Button Command="{Binding Save}">
 						<TextBlock Text="Ок"></TextBlock>

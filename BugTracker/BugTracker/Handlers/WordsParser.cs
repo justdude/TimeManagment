@@ -35,7 +35,7 @@ namespace BugTracker.Handlers
 
 
 		//Plus S/E 0.01/0 end timer.
-		public static float[] ToFloat(string query)
+		public static void ToFloat(string query, out float r1, out float r2)
 		{
 			//var res = query.Contains(Constants.Global.Plus);
 			//res &= query.Contains(Constants.Global.SpentEstimate);
@@ -46,11 +46,11 @@ namespace BugTracker.Handlers
 			var splitted = query.Split(' ');
 			var skipped = splitted.TakeWhile(p => p == Constants.Global.SpentEstimate).ToString();
 			var splitted1 = skipped.Split('/');
-			float r1, r2;
+			//float r1, r2;
 
 			float.TryParse(splitted1[0], out r1);
 			float.TryParse(splitted1[1], out r2);
-			return new float[]{r1, r2};
+			//return new float[]{r1, r2};
 		}
 
 		public static string ToString(float spent, float estimate)

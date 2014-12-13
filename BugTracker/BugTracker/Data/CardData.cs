@@ -2,13 +2,20 @@
 
 namespace BugTracker.Data
 {
-	public class CardData
+	public class CardData : LogTimeBase
 	{
-
 		public string Id { get; set; }
 		public string IdBoard { get; set; }
 		public string IdList { get; set; }
 		public string Name { get; set; }
 		public string Desc { get; set; }
+
+
+		public CardData():base()
+		{ }
+
+		public CardData(float spent, float estimate): base(spent, estimate)
+		{ }
+
 	}
 }

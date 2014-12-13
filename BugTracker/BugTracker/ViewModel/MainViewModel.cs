@@ -23,6 +23,7 @@ namespace BugTracker.ViewModel
 		#region Fields
 
 		private WebWindow.AuthWindow window;
+		private ManualResetEvent resetEvent = new ManualResetEvent(false);
 
 		#endregion
 
@@ -62,7 +63,7 @@ namespace BugTracker.ViewModel
 			
 			TrelloAdapter = new CTrelloAdapter();
 			TrelloAdapter.Authorize(Engine.Instance.Oauth.Token);
-
+			resetEvent.Set();
 			//Lists = new ObservableCollection<ListViewModel>();
 			//ThreadPool.QueueUserWorkItem(new WaitCallback(p => Load()));
 			//ListDataCollection.Factory.StartNew(() => { });
@@ -108,6 +109,9 @@ namespace BugTracker.ViewModel
 
 		public void Load()
 		{
+			while (resetEvent.WaitOne(100))
+			{ }
+
 			Invoke(() => { IsLoading = true; });
 
 			try

@@ -12,13 +12,14 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using MahApps.Metro.Controls;
 
 namespace BugTracker.View
 {
 	/// <summary>
 	/// Interaction logic for WindowMainView.xaml
 	/// </summary>
-	public partial class WindowMainView : Window
+	public partial class WindowMainView : MetroWindow //Window
 	{
 		public static Dispatcher WindowDispatcher;
 

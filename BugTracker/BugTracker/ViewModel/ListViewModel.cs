@@ -20,9 +20,15 @@ namespace BugTracker.ViewModel
 		private bool mvIsVisibleAddButton;
 		private RelayCommand OnSave;
 		private RelayCommand OnAdd;
-		public ListData ListDataCollection { get; private set; }
+		private float mvSpentValue;
+		private float mvEstimateValue;
 
+		#region ListDataColl
+		public ListData ListDataCollection { get; private set; }
 		public ObservableCollection<TaskViewModel> Tasks { get; private set; }
+		#endregion 
+
+		#region ListData
 
 		public string Name
 		{
@@ -81,10 +87,125 @@ namespace BugTracker.ViewModel
 				return ListDataCollection.IdBoard;
 			}
 		}
+		#endregion 
 
 		public ListViewModel(ListData listData)
 		{
 			ListDataCollection = listData;
+		}
+
+		#region Commands
+		public ICommand Save
+		{
+			get
+			{
+				if (OnSave == null)
+				{
+					OnSave = new RelayCommand(OnSaveClick);
+				}
+				return OnSave;
+			}
+		}		
+
+		public ICommand Add
+		{
+			get
+			{
+				if (OnAdd == null)
+				{
+					OnAdd = new RelayCommand(()=>
+					{
+						this.IsVisibleAddButton = !IsVisibleAddButton;
+					});
+				}
+				return OnAdd;
+			}
+		}
+		#endregion
+
+		private CardData modCachedTask = new CardData();
+
+		public float SpentValue
+		{
+			get
+			{
+				return modCachedTask.SpentValue;
+			}
+			set
+			{
+				if (value == modCachedTask.SpentValue)
+					return;
+
+				modCachedTask.SpentValue = value;
+
+				base.RaisePropertyChanged("SpentValue");
+			}
+		}
+		public float EstimateValue
+		{
+			get
+			{
+				return modCachedTask.EstimateValue;
+			}
+			set
+			{
+				if (value == modCachedTask.EstimateValue)
+					return;
+
+				modCachedTask.EstimateValue = value;
+
+				base.RaisePropertyChanged("EstimateValue");
+			}
+		}
+		public bool IsVisibleAddButton
+		{
+			get
+			{
+				return mvIsVisibleAddButton;
+			}
+			set
+			{
+				if (mvIsVisibleAddButton == value)
+					return;
+
+				switch (mvIsVisibleAddButton)
+				{
+					case (true):
+						modCachedTask = new CardData(0, 0);
+						break;
+					case (false):
+						modCachedTask = null;
+						break;
+				}
+
+				mvIsVisibleAddButton = value;
+
+				base.RaisePropertyChanged("IsVisibleAddButton");
+			}
+		}
+
+		private void OnSaveClick()
+		{
+			//FloatToStringConverter
+			ThreadPool.QueueUserWorkItem(new WaitCallback((p) =>
+			{
+				Invoke(() => IsLoading = true);
+
+				AddCard(SpentValue, EstimateValue);
+				Load();
+
+				Invoke(() =>
+				{
+					IsLoading = false;
+					IsVisibleAddButton = false;
+				});
+			}));
+		}
+
+		public void AddCard(float spent, float estimate)
+		{
+			Engine.Instance.Cards.CreateCard(IdList, 
+				DateTime.Now.ToString(), modCachedTask.ToString());
 		}
 
 		public void Load()
@@ -102,67 +223,17 @@ namespace BugTracker.ViewModel
 
 			}
 		}
+
 		private ObservableCollection<TaskViewModel> GetTasks(IEnumerable<CardData> collection)
 		{
 			if (collection == null)
 				return new ObservableCollection<TaskViewModel>();
 
-			return new ObservableCollection<TaskViewModel>(collection.Select<CardData, TaskViewModel>(p => new TaskViewModel(p)));
-		}
-
-		public bool IsVisibleAddButton
-		{
-			get
-			{
-				return mvIsVisibleAddButton;
-			}
-			set
-			{
-				if (mvIsVisibleAddButton == value)
-					return;
-
-				mvIsVisibleAddButton = value;
-
-				base.RaisePropertyChanged("IsVisibleAddButton");
-			}
-		}
-
-		public ICommand Save
-		{
-			get
-			{
-				if (OnSave == null)
-				{
-					OnSave = new RelayCommand(() => { IsVisibleAddButton = false; });
-				}
-				return OnSave;
-			}
-		}
-
-		public ICommand Add
-		{
-			get
-			{
-				if (OnAdd == null)
-				{
-					OnAdd = new RelayCommand(()=>{IsVisibleAddButton = true;});
-				}
-				return OnAdd;
-			}
+			return new ObservableCollection<TaskViewModel>(collection.Select<CardData, TaskViewModel>(p => new TaskViewModel(this, p)));
 		}
 
 
 
-		private void OnSaveClick()
-		{
-			//FloatToStringConverter
-			ThreadPool.QueueUserWorkItem(new WaitCallback((p) =>
-			{
-				Invoke(() => IsLoading = true);
-				//PutData(SpentValue, EstimateValue);
-				Invoke(() => { IsLoading = false; IsVisibleAddButton = false; });
-			}));
-		}
 
 	}
 }

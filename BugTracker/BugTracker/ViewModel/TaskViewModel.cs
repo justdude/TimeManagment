@@ -22,10 +22,11 @@ namespace BugTracker.ViewModel
 		private bool mvIsVisibleAddButton = false;
 
 		private RelayCommand OnSave;
-		private ICommand OnAdd;
+		private ListViewModel modParentList;
 
 		public CardData Task { get; private set; }
 
+		#region CardFields data
 		public string Name
 		{
 			get
@@ -84,20 +85,21 @@ namespace BugTracker.ViewModel
 			}
 		}
 
+		#endregion
 
-
+		#region computed data
 		public float SpentValue
 		{
 			get
 			{
-				return mvSpentValue;
+				return Task.SpentValue;
 			}
 			set
 			{
-				if (value == mvSpentValue)
+				if (value == Task.SpentValue)
 					return;
 
-				mvSpentValue = value;
+				Task.SpentValue = value;
 
 				base.RaisePropertyChanged("SpentValue");
 			}
@@ -106,40 +108,34 @@ namespace BugTracker.ViewModel
 		{
 			get
 			{
-				return mvEstimateValue;
+				return Task.EstimateValue;
 			}
 			set
 			{
-				if (value == mvEstimateValue)
+				if (value == Task.EstimateValue)
 					return;
-				
-				mvEstimateValue = value;
+
+				Task.EstimateValue = value;
 
 				base.RaisePropertyChanged("EstimateValue");
 			}
 		}
-		public float RemainingValue
+		public float Remaining
 		{
 			get
 			{
-				return SpentValue - EstimateValue;
+				return Task.Remaining;
 			}
 		}
+		#endregion
 
-
-
-		public void PutData(float spent, float estimate)
-		{
-			var text = Handlers.WordsParser.ToString(spent, estimate);
-			Engine.Instance.Cards.CreateCard(IdList, DateTime.Now.ToString(), text);
-		}
-
-		public TaskViewModel(CardData task)
+		#region Ctr
+		public TaskViewModel(ListViewModel parentList, CardData task)
 		{
 			Task = task;
+			modParentList = parentList;
 		}
-
-
+		#endregion
 
 	}
 }
