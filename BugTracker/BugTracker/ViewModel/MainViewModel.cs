@@ -214,7 +214,7 @@ namespace BugTracker.ViewModel
 
 		void Tasks_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
 		{
-			//var tasks = (sender as ObservableCollection<TaskViewModel>());
+			//var tasks = (sender as ObservableCollection<CardViewModel>());
 
 			//if (tasks == null)
 			//	return;

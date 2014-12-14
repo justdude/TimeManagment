@@ -25,6 +25,8 @@ namespace BugTracker.Services.Trello
 				return null;
 
 			var request = CreateRequest(resource);
+			request.AddParameter("actions", "commentCard");
+
 			var client = CreateClient();
 			var restResponse = client.Execute<CardData>(request);
 
@@ -104,7 +106,7 @@ namespace BugTracker.Services.Trello
 				return null;
 
 			var request = CreateRequest(Token, resource);
-
+			request.AddParameter("actions", "commentCard");
 			var client = CreateClient();
 			var response = client.Execute<List<CardData>>(request);
 		
@@ -117,22 +119,41 @@ namespace BugTracker.Services.Trello
 		}
 
 
+		public string GetActions(string actionId)
+		{
+			if (CheckArg())
+				return string.Empty;
+
+			var resource = string.Format("/actions/{0}/", actionId);
+			var request = CreateRequest(Token, resource);
+			request.Method = Method.POST;
+
+			var client = CreateClient();
+			var responce = client.Execute(request);
+			return responce.Content;
+		}
+
 		public void AddComment(string cardId, string comment)
 		{
 
 			if (CheckArg())
 				return;
-			var resource = string.Format("/cards/{0}/actions/{1}/comments", cardId, comment);
-
+			var resource = string.Format("/cards/{0}/actions/{1}", cardId, "comments");
+			//request.AddParameter("actions", "commentCard");
 			var request = CreateRequest(Token, resource);
 			request.Method = Method.POST;
-			//request.AddParameter("name", card.Name);
-			//request.AddParameter("desc", card.Desc);
+			//request.AddParameter("idAction", card.Name);
+			request.AddParameter("text", comment);
 
 			var client = CreateClient();
 			client.Execute(request);
 		}
 
+		/// <summary>
+		/// !!!!!!!!!!!!!!!!!!!!!!!
+		/// </summary>
+		/// <param name="cardId"></param>
+		/// <param name="comment"></param>
 		public void DeleteComment(string cardId, string comment)
 		{
 

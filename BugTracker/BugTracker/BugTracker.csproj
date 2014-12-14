@@ -109,6 +109,8 @@
     </ApplicationDefinition>
     <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
     <Compile Include="Converters\FloatToStringConverter.cs" />
+    <Compile Include="Data\ActionData.cs" />
+    <Compile Include="Data\Comment.cs" />
     <Compile Include="Data\ILogTime.cs" />
     <Compile Include="Data\Person.cs" />
     <Compile Include="Data\ListData.cs" />
@@ -124,11 +126,12 @@
     <Compile Include="Services\Trello\CTrelloApiBase.cs" />
     <Compile Include="Services\Trello\TrelloRequestFailedException.cs" />
     <Compile Include="Services\Trello\TrelloToken.cs" />
+    <Compile Include="ViewModel\CommentModelView.cs" />
     <Compile Include="ViewModel\ExtendedViewModelBase.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\BoardViewModel.cs" />
     <Compile Include="ViewModel\ListViewModel.cs" />
-    <Compile Include="ViewModel\TaskViewModel.cs" />
+    <Compile Include="ViewModel\CardViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="View\BoardListView.cs">
       <SubType>UserControl</SubType>

@@ -47,13 +47,11 @@
 					Height="25"
 					Grid.Row="0"
 					Orientation="Horizontal">
+
+
 					<TextBlock Text="{Binding Name}"></TextBlock>
 					<TextBlock Text="{Binding Desc}"></TextBlock>
-					
-					
-					<TextBlock Text="{Binding TotalSpent}"></TextBlock>
-					<TextBlock Text="{Binding TotalEstimate}"></TextBlock>
-					<TextBlock Text="{Binding TotalRemaining}"></TextBlock>
+
 					<Button Command="{Binding Add}"
 									Margin="5,0,0,0"
 									VerticalAlignment="Center"
@@ -74,10 +72,10 @@
 																	Converter={StaticResource booleanToVisibilityConverter}}"
 										Orientation="Horizontal">
 
-					<TextBox MinWidth="80" Text="{Binding SpentValue}"></TextBox>
-					<TextBox MinWidth="80" Text="{Binding EstimateValue}"></TextBox>
-					<TextBox MinWidth="80" Text="{Binding Remaining}"></TextBox>
-					
+
+					<TextBox MinWidth="80" Text="{Binding NameInput}"></TextBox>
+					<TextBox MinWidth="80" Text="{Binding DescInput}"></TextBox>
+
 					<Button Command="{Binding Save}">
 						<TextBlock Text="Ок"></TextBlock>
 					</Button>
@@ -85,7 +83,7 @@
 				</StackPanel>
 
 
-				<!--Tasks-->
+				<!--Cards-->
 				<ListBox Grid.Row="2"
 									Margin="0,5,0,0"
 									ItemsSource="{Binding Tasks}">
@@ -97,6 +95,62 @@
 										Orientation="Vertical">
 									<TextBlock Text="{Binding Name}"></TextBlock>
 									<TextBlock Text="{Binding Desc}"></TextBlock>
+									
+									
+									<!--!!!!!!!!!!!Comments!!!!!!!!!!!!!!!!!!-->
+									<Expander>
+										<StackPanel Orientation="Vertical">
+
+											<!--Header-->
+											<StackPanel 
+													Height="25"
+													Orientation="Horizontal">
+												<StackPanel Orientation="Horizontal">
+													<TextBlock Text="  S: "></TextBlock>
+													<TextBlock Text="{Binding TotalSpent}"></TextBlock>
+												</StackPanel>
+
+												<StackPanel Orientation="Horizontal">
+													<TextBlock Text="  E: "></TextBlock>
+													<TextBlock Text="{Binding TotalEstimate}"></TextBlock>
+												</StackPanel>
+
+												<StackPanel Orientation="Horizontal">
+													<TextBlock Text="  R: "></TextBlock>
+													<TextBlock Text="{Binding TotalRemaining}"></TextBlock>
+												</StackPanel>
+												
+												<Button Command="{Binding Add}"
+														Margin="5,0,0,0"
+														VerticalAlignment="Center"
+														HorizontalAlignment="Center">
+													<Path 
+														Width="8" 
+														Height="8"
+														Stretch="Fill" 
+														Fill="#FF000000"
+														Data="F1 M 35,19L 41,19L 41,35L 57,35L 57,41L 41,41L 41,57L 35,57L 35,41L 19,41L 19,35L 35,35L 35,19 Z "/>
+												</Button>
+											</StackPanel>
+
+											<!--SubHeader-->
+											<StackPanel 
+										Margin="0,5,0,0"
+										Visibility="{Binding IsVisibleAddButton, 
+																	Converter={StaticResource booleanToVisibilityConverter}}"
+										Orientation="Horizontal">
+
+												<TextBox MinWidth="80" Text="{Binding SpentValueInput}"></TextBox>
+												<TextBox MinWidth="80" Text="{Binding EstimateValueInput}"></TextBox>
+												<Button Command="{Binding Save}">
+													<TextBlock Text="Ок"></TextBlock>
+												</Button>
+
+											</StackPanel>
+
+										</StackPanel>
+									</Expander>
+									
 								</StackPanel>
 							</Border>
 						</DataTemplate>

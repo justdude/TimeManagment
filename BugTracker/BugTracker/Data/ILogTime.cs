@@ -17,9 +17,11 @@ namespace BugTracker.Data
 		float Remaining
 		{ get; }
 
+		//virtual void ProcessValues();
+
 	}
 
-	public abstract class LogTimeBase : ILogTime
+	public class LogTimeBase : ILogTime
 	{
 
 		public LogTimeBase()
@@ -61,7 +63,7 @@ namespace BugTracker.Data
 			float r1 = 0, r2 = 0;
 			
 			Handlers.WordsParser.ToFloat(str, out r1, out r2);
-			
+
 			SpentValue += r1;
 			EstimateValue += r2;
 		}
@@ -69,6 +71,16 @@ namespace BugTracker.Data
 		public override string ToString()
 		{
 			return Handlers.WordsParser.ToString(SpentValue, EstimateValue);
+		}
+
+		#endregion
+
+		#region ILogTime Members
+
+
+		public virtual void ProcessValues()
+		{
+			
 		}
 
 		#endregion

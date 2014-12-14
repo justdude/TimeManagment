@@ -12,6 +12,7 @@ using BugTracker.Services;
 using System.Windows.Input;
 using GalaSoft.MvvmLight.Command;
 using System.Threading;
+using System.Linq;
 
 namespace BugTracker.ViewModel
 {
@@ -22,10 +23,13 @@ namespace BugTracker.ViewModel
 		private RelayCommand OnAdd;
 		private float mvSpentValue;
 		private float mvEstimateValue;
+		private string mvNameInput;
+		private string mvDeskInput;
+		private string mvDescInput;
 
 		#region ListDataColl
 		public ListData ListDataCollection { get; private set; }
-		public ObservableCollection<TaskViewModel> Tasks { get; private set; }
+		public ObservableCollection<CardViewModel> Tasks { get; private set; }
 		#endregion 
 
 		#region ListData
@@ -92,7 +96,6 @@ namespace BugTracker.ViewModel
 		public ListViewModel(ListData listData)
 		{
 			ListDataCollection = listData;
-			modCachedTask = new CardData();
 		}
 
 		#region Commands
@@ -124,40 +127,7 @@ namespace BugTracker.ViewModel
 		}
 		#endregion
 
-		private CardData modCachedTask = new CardData();
 
-		public float SpentValue
-		{
-			get
-			{
-				return modCachedTask.SpentValue;
-			}
-			set
-			{
-				if (value == modCachedTask.SpentValue)
-					return;
-
-				modCachedTask.SpentValue = value;
-
-				base.RaisePropertyChanged("SpentValue");
-			}
-		}
-		public float EstimateValue
-		{
-			get
-			{
-				return modCachedTask.EstimateValue;
-			}
-			set
-			{
-				if (value == modCachedTask.EstimateValue)
-					return;
-
-				modCachedTask.EstimateValue = value;
-
-				base.RaisePropertyChanged("EstimateValue");
-			}
-		}
 		public bool IsVisibleAddButton
 		{
 			get
@@ -175,34 +145,69 @@ namespace BugTracker.ViewModel
 			}
 		}
 
+		public string NameInput
+		{
+			get
+			{
+				return mvNameInput;
+			}
+			set
+			{
+				if (mvNameInput == value)
+					return;
+
+				mvNameInput = value;
+
+				base.RaisePropertyChanged("NameInput");
+			}
+		}
+		public string DescInput
+		{
+			get
+			{
+				return mvDescInput;
+			}
+			set
+			{
+				if (mvDescInput == value)
+					return;
+
+				mvDescInput = value;
+
+				base.RaisePropertyChanged("DescInput");
+			}
+		}
+
 		private void OnSaveClick()
 		{
 			ThreadPool.QueueUserWorkItem(new WaitCallback((p) =>
 			{
 				Invoke(() => IsLoading = true);
-				
-				AddCard(SpentValue, EstimateValue);
-				var cards = Engine.Instance.Cards.GetCards(this.Id, this.IdBoard);
-				modCachedTask = new CardData(0, 0);
 
+				AddCard(NameInput, DescInput);
+				var cards = Engine.Instance.Cards.GetCards(this.Id, this.IdBoard);
+				
+				NameInput = "";
+				DescInput = "";
+
+				Load();
 				Invoke(() =>
 				{
-					Tasks.Clear();
-					var items = (cards.Select<CardData, TaskViewModel>(t => new TaskViewModel(this, t)));
-					foreach (var item in items)
-					{
-						Tasks.Add(item);
-					}
+					//Tasks.Clear();
+					//var items = (cards.Select<CardData, CardViewModel>(t => new CardViewModel(this, t)));
+					//foreach (var item in items)
+					//{
+					//	Tasks.Add(item);
+					//}
 					IsLoading = false;
 					IsVisibleAddButton = false;
 				});
 			}));
 		}
 
-		public void AddCard(float spent, float estimate)
+		public void AddCard(string name, string desc)
 		{
-			Engine.Instance.Cards.CreateCard(Id, 
-				DateTime.Now.ToString(), modCachedTask.ToString());
+			Engine.Instance.Cards.CreateCard(Id, name, desc);
 		}
 
 		public void Load()
@@ -211,8 +216,33 @@ namespace BugTracker.ViewModel
 			{
 				//foreach (var list in Lists)
 				{
+					Invoke(() =>
+					{
+						if (Tasks == null)
+						{
+							Tasks = new ObservableCollection<CardViewModel>();
+						}
+
+						Tasks.Clear();
+					});
+
+
 					var cards = Engine.Instance.Cards.GetCards(this.Id, this.IdBoard);
-					Invoke( ()=> Tasks = GetTasks(cards));
+					foreach(var card in cards)
+					{
+						card.ProcessValues();
+					}
+
+					Invoke(() =>
+					{
+						foreach (var card in cards)
+						{
+							var newItem = new CardViewModel(this, card);
+							Tasks.Add(newItem);
+						}
+
+					});
+					
 				}
 			}
 			catch (Exception ex)
@@ -221,12 +251,12 @@ namespace BugTracker.ViewModel
 			}
 		}
 
-		private ObservableCollection<TaskViewModel> GetTasks(IEnumerable<CardData> collection)
+		private ObservableCollection<CardViewModel> GetTasks(IEnumerable<CardData> collection)
 		{
 			if (collection == null)
-				return new ObservableCollection<TaskViewModel>();
+				return new ObservableCollection<CardViewModel>();
 
-			return new ObservableCollection<TaskViewModel>(collection.Select<CardData, TaskViewModel>(p => new TaskViewModel(this, p)));
+			return new ObservableCollection<CardViewModel>(collection.Select<CardData, CardViewModel>(p => new CardViewModel(this, p)));
 		}
 
 
