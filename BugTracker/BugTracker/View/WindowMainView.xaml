@@ -89,17 +89,14 @@ xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
 			Grid.Row="1">
 		</View:TaskListView>-->
 
-		<StackPanel 
-				Grid.Row="1"
-				Grid.Column="0">
-			
-		</StackPanel>
 		
 		<!--Tasks-->
 		<ListBox 
 				Name="Lists"
-				Grid.Column="1"
-				Grid.Row="1"
+				Grid.Column="0"
+				Grid.Row="0"
+				Grid.RowSpan="2"
+				Grid.ColumnSpan="2"
         ItemsSource="{Binding Lists,IsAsync=True}"
 				Focusable="False"
 				ItemContainerStyle="{StaticResource ListBoxItemStyle}"

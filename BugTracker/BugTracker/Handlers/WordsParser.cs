@@ -37,14 +37,21 @@ namespace BugTracker.Handlers
 		//Plus S/E 0.01/0 end timer.
 		public static void ToFloat(string query, out float r1, out float r2)
 		{
-			//var res = query.Contains(Constants.Global.Plus);
-			//res &= query.Contains(Constants.Global.SpentEstimate);
+			var res = query.Contains(Constants.Global.Plus);
+			res &= query.Contains(Constants.Global.SpentEstimate);
 
-			//if (res == false)
-			//	return "";
+			r1 = 0;
+			r2 = 0;
+
+			if (res == false)
+				return;
 
 			var splitted = query.Split(' ');
-			var skipped = splitted.TakeWhile(p => p == Constants.Global.SpentEstimate).ToString();
+
+			if (splitted.Count() <= 2)
+				return;
+
+			var skipped = splitted[2];
 			var splitted1 = skipped.Split('/');
 			//float r1, r2;
 
