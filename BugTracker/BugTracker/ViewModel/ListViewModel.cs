@@ -92,6 +92,7 @@ namespace BugTracker.ViewModel
 		public ListViewModel(ListData listData)
 		{
 			ListDataCollection = listData;
+			modCachedTask = new CardData();
 		}
 
 		#region Commands
@@ -168,16 +169,6 @@ namespace BugTracker.ViewModel
 				if (mvIsVisibleAddButton == value)
 					return;
 
-				switch (mvIsVisibleAddButton)
-				{
-					case (true):
-						modCachedTask = new CardData(0, 0);
-						break;
-					case (false):
-						modCachedTask = null;
-						break;
-				}
-
 				mvIsVisibleAddButton = value;
 
 				base.RaisePropertyChanged("IsVisibleAddButton");
@@ -186,16 +177,22 @@ namespace BugTracker.ViewModel
 
 		private void OnSaveClick()
 		{
-			//FloatToStringConverter
 			ThreadPool.QueueUserWorkItem(new WaitCallback((p) =>
 			{
 				Invoke(() => IsLoading = true);
-
+				
 				AddCard(SpentValue, EstimateValue);
-				Load();
+				var cards = Engine.Instance.Cards.GetCards(this.Id, this.IdBoard);
+				modCachedTask = new CardData(0, 0);
 
 				Invoke(() =>
 				{
+					Tasks.Clear();
+					var items = (cards.Select<CardData, TaskViewModel>(t => new TaskViewModel(this, t)));
+					foreach (var item in items)
+					{
+						Tasks.Add(item);
+					}
 					IsLoading = false;
 					IsVisibleAddButton = false;
 				});
@@ -204,7 +201,7 @@ namespace BugTracker.ViewModel
 
 		public void AddCard(float spent, float estimate)
 		{
-			Engine.Instance.Cards.CreateCard(IdList, 
+			Engine.Instance.Cards.CreateCard(Id, 
 				DateTime.Now.ToString(), modCachedTask.ToString());
 		}
 

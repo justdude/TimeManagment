@@ -109,8 +109,8 @@ namespace BugTracker.ViewModel
 
 		public void Load()
 		{
-			while (resetEvent.WaitOne(100))
-			{ }
+			//while (resetEvent.WaitOne(100))
+			//{ }
 
 			Invoke(() => { IsLoading = true; });
 

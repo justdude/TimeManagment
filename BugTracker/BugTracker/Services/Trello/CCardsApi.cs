@@ -116,5 +116,36 @@ namespace BugTracker.Services.Trello
 			});
 		}
 
+
+		public void AddComment(string cardId, string comment)
+		{
+
+			if (CheckArg())
+				return;
+			var resource = string.Format("/cards/{0}/actions/{1}/comments", cardId, comment);
+
+			var request = CreateRequest(Token, resource);
+			request.Method = Method.POST;
+			//request.AddParameter("name", card.Name);
+			//request.AddParameter("desc", card.Desc);
+
+			var client = CreateClient();
+			client.Execute(request);
+		}
+
+		public void DeleteComment(string cardId, string comment)
+		{
+
+			if (CheckArg())
+				return;
+			var resource = string.Format("/cards/{0}/actions/{1}/comments", cardId);
+
+			var request = CreateRequest(Token, resource);
+			request.Method = Method.DELETE;
+
+			var client = CreateClient();
+			client.Execute(request);
+		}
+
 	}
 }
