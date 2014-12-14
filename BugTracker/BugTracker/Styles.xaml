@@ -6,10 +6,10 @@
 	
 	
 			<Converters:BooleanToVisibilityConverter x:Key="booleanToVisibilityConverter"/>
+			<Converters:ColorToStateTextConverter x:Key="colorToStateTextConverter"/>
 
-	
-	
-			<Style x:Key="BorderStyle" TargetType="Border">
+
+	<Style x:Key="BorderStyle" TargetType="Border">
 				<Setter Property="Opacity" Value="0.75"></Setter>
 		<Setter Property="BorderThickness" Value="1"></Setter>
 		<Setter Property="CornerRadius" Value="18"></Setter>

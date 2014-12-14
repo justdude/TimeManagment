@@ -11,7 +11,14 @@ namespace BugTracker.Data
 		public string Name { get; set; }
 		public string Desc { get; set; }
 
+		public List<string> IdLabels { get; set; }
 		public List<ActionData> Actions { get; set; }
+
+		public LabelData.ColorTypes Color
+		{
+			get;
+			set;
+		}
 
 		public CardData():base()
 		{ }

@@ -16,6 +16,19 @@ namespace BugTracker.Constants
 		public const string SpentEstimate = "S/E";
 		public const string Delimeter = "/";
 
+		public const string ClosedStateText = "Closed";
+		public const string OpenStateText = "Open";
+		public const string FixedStateText = "Fixed";
+		public const string ReopenedStateText = "Reopened";
+
+		public static List<string> StatesItems = new List<string>()
+		{
+			Global.ClosedStateText,
+			Global.OpenStateText,
+			Global.FixedStateText,
+			Global.ReopenedStateText
+		};
+
 		enum Status
 		{
 			Open,

@@ -48,10 +48,11 @@
 					Grid.Row="0"
 					Orientation="Horizontal">
 
+					
 
 					<TextBlock Text="{Binding Name}"></TextBlock>
 					<TextBlock Text="{Binding Desc}"></TextBlock>
-
+					
 					<Button Command="{Binding Add}"
 									Margin="5,0,0,0"
 									VerticalAlignment="Center"
@@ -95,12 +96,20 @@
 										Orientation="Vertical">
 									<TextBlock Text="{Binding Name}"></TextBlock>
 									<TextBlock Text="{Binding Desc}"></TextBlock>
-									
-									
+
 									<!--!!!!!!!!!!!Comments!!!!!!!!!!!!!!!!!!-->
 									<Expander>
 										<StackPanel Orientation="Vertical">
 
+											<StackPanel Orientation="Horizontal">
+												<ComboBox 
+													ItemsSource="{Binding	States}"
+													SelectedItem="{Binding SelectedState, 
+													Mode=TwoWay, 
+													Converter={StaticResource colorToStateTextConverter}}"></ComboBox>
+												<Button Command="{Binding SaveState}" 
+																Content="Подтвердить"></Button>
+											</StackPanel>
 											<!--Header-->
 											<StackPanel 
 													Height="25"

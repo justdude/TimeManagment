@@ -108,10 +108,12 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
+    <Compile Include="Converters\ColorToStateTextConverter.cs" />
     <Compile Include="Converters\FloatToStringConverter.cs" />
     <Compile Include="Data\ActionData.cs" />
     <Compile Include="Data\Comment.cs" />
     <Compile Include="Data\ILogTime.cs" />
+    <Compile Include="Data\LabelData.cs" />
     <Compile Include="Data\Person.cs" />
     <Compile Include="Data\ListData.cs" />
     <Compile Include="Data\BoardData.cs" />
@@ -122,6 +124,7 @@
     <Compile Include="Services\Engine.cs" />
     <Compile Include="Services\Trello\CBoardsApi.cs" />
     <Compile Include="Services\Trello\CCardsApi.cs" />
+    <Compile Include="Services\Trello\CLabelApi.cs" />
     <Compile Include="Services\Trello\CTrelloApi.cs" />
     <Compile Include="Services\Trello\CTrelloApiBase.cs" />
     <Compile Include="Services\Trello\TrelloRequestFailedException.cs" />

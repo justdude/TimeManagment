@@ -12,7 +12,6 @@ using BugTracker.Services;
 using System.Windows.Input;
 using GalaSoft.MvvmLight.Command;
 using System.Threading;
-using System.Linq;
 
 namespace BugTracker.ViewModel
 {
@@ -231,6 +230,8 @@ namespace BugTracker.ViewModel
 					foreach(var card in cards)
 					{
 						card.ProcessValues();
+						if (card.IdLabels.Count>0)
+							card.Color = Engine.Instance.Labels.GetLabel(card.IdLabels[0]).Value;
 					}
 
 					Invoke(() =>

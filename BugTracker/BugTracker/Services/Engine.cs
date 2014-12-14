@@ -13,6 +13,7 @@ namespace BugTracker.Services
 		public IOauthCollection Oauth { get; set; }
 		public CBoardsApi Board { get; private set; }
 		public CCardsApi Cards { get; private set; }
+		public CLabelApi Labels { get; private set; }
 
 		public static Engine Instance = null;
 
@@ -27,6 +28,7 @@ namespace BugTracker.Services
 			Oauth = new IOauthCollection(string.Empty, Constants.Trello.Key);
 			Board = new CBoardsApi(Oauth);
 			Cards = new CCardsApi(Oauth);
+			Labels = new CLabelApi(Oauth);
 		}
 
 

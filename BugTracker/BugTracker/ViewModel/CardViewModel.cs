@@ -25,6 +25,8 @@ namespace BugTracker.ViewModel
 		private RelayCommand OnAdd;
 		private ListViewModel modParentList;
 		private LogTimeBase modLogTime;
+		private Data.LabelData.ColorTypes mvState;
+		private List<string> mvStates;
 		public CardData Task { get; private set; }
 
 		#region CardFields data
@@ -83,6 +85,35 @@ namespace BugTracker.ViewModel
 			get
 			{
 				return Task.IdBoard;
+			}
+		}
+
+		public LabelData.ColorTypes SelectedState
+		{
+			get
+			{
+				return mvState;
+			}
+			set
+			{
+				if (mvState == value)
+					return;
+
+				mvState = value;
+
+				base.RaisePropertyChanged("State");
+			}
+		}
+
+		public List<string> States
+		{
+			get
+			{
+				if (mvStates == null)
+				{
+					mvStates = new List<string>(Constants.Global.StatesItems);
+				}
+				return mvStates;
 			}
 		}
 
@@ -146,7 +177,7 @@ namespace BugTracker.ViewModel
 			{
 				if (OnSave == null)
 				{
-					OnSave = new RelayCommand(OnSaveClick);
+					OnSave = new RelayCommand(OnSaveCommentClick);
 				}
 				return OnSave;
 			}
@@ -240,9 +271,33 @@ namespace BugTracker.ViewModel
 				return Task.Remaining.ToString();
 			}
 		}
+
 		#endregion
 
-		private void OnSaveClick()
+		private void OnSaveStateClick()
+		{
+			ThreadPool.QueueUserWorkItem(new WaitCallback((p) =>
+			{
+				Invoke(() => IsLoading = true);
+
+				var str = modLogTime.ToString();
+				AddComment(str);
+
+				Load(Id);
+
+				Invoke(() =>
+				{
+					base.RaisePropertyChanged("TotalSpent");
+					base.RaisePropertyChanged("TotalEstimate");
+					base.RaisePropertyChanged("TotalRemaining");
+
+					IsLoading = false;
+					IsVisibleAddButton = false;
+				});
+			}));
+		}
+
+		private void OnSaveCommentClick()
 		{
 			ThreadPool.QueueUserWorkItem(new WaitCallback((p) =>
 			{
@@ -269,6 +324,14 @@ namespace BugTracker.ViewModel
 		{
 			Task = Engine.Instance.Cards.GetCard(Id);
 			Task.ProcessValues();
+
+			Load();
+		}
+
+		public void Load()
+		{
+			if (Task.IdLabels.Count > 0)
+				SelectedState = Engine.Instance.Labels.GetLabel(Task.IdLabels[0]).Value;
 		}
 
 		private void AddComment(string comment)

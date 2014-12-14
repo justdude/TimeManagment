@@ -26,11 +26,34 @@ namespace BugTracker.Services.Trello
 
 			var request = CreateRequest(resource);
 			request.AddParameter("actions", "commentCard");
+			request.AddParameter("fields", "idLabels");
 
 			var client = CreateClient();
 			var restResponse = client.Execute<CardData>(request);
 
 			return restResponse.Data;
+		}
+
+		public IEnumerable<CardData> GetCards(string listId, string boardId)
+		{
+			var resource = string.Format("/lists/{0}/cards/open", listId);
+
+			if (CheckArg())
+				return null;
+
+			var request = CreateRequest(Token, resource);
+			request.AddParameter("actions", "commentCard");
+			//request.AddParameter("fields", "idLabels");
+
+			var client = CreateClient();
+			var response = client.Execute<List<CardData>>(request);
+
+			return response.Data.Select(c =>
+			{
+				c.IdList = listId;
+				c.IdBoard = boardId;
+				return c;
+			});
 		}
 
 
@@ -96,41 +119,6 @@ namespace BugTracker.Services.Trello
 
 			var client = CreateClient();
 			client.Execute(request);
-		}
-
-		public IEnumerable<CardData> GetCards(string listId, string boardId)
-		{
-			var resource = string.Format("/lists/{0}/cards/open", listId);
-
-			if (CheckArg())
-				return null;
-
-			var request = CreateRequest(Token, resource);
-			request.AddParameter("actions", "commentCard");
-			var client = CreateClient();
-			var response = client.Execute<List<CardData>>(request);
-		
-			return response.Data.Select(c =>
-			{
-				c.IdList = listId;
-				c.IdBoard = boardId;
-				return c;
-			});
-		}
-
-
-		public string GetActions(string actionId)
-		{
-			if (CheckArg())
-				return string.Empty;
-
-			var resource = string.Format("/actions/{0}/", actionId);
-			var request = CreateRequest(Token, resource);
-			request.Method = Method.POST;
-
-			var client = CreateClient();
-			var responce = client.Execute(request);
-			return responce.Content;
 		}
 
 		public void AddComment(string cardId, string comment)
